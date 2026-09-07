@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import os
+import subprocess
 import socket
 import time
 import select
@@ -27,7 +27,7 @@ def test(expect, client_af, server_af, from_ip, to_ip, args="", client_sends_fir
 
     all_args = "-1 %s %d %s %d" % (args, client_port, to_ip, server_port)
     print ("Running with %s" % all_args)
-    if os.system("./6tunnel " + all_args) != 0:
+    if subprocess.run(["./6tunnel"] + all_args.split()).returncode != 0:
         if expect != COMMAND_FAIL:
             raise Exception("expected %s yet command failed" % labels[expect])
         else:
