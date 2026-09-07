@@ -96,7 +96,7 @@ def test(expect, client_af, server_af, from_ip, to_ip, args="", client_sends_fir
     if app_inserts:
         tmp = accept_sock.recv(len(app_inserts))
         if tmp != app_inserts:
-            raise Exception("expected 6tunnel insert \"%s\" yet did not receive" % app_sends_first)
+            raise Exception("expected 6tunnel insert \"%s\" yet did not receive" % app_inserts)
 
     if accept_sock.recv(len(server_receives)) != server_receives:
         raise Exception("data mismatch")
