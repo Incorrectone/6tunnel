@@ -4,6 +4,7 @@ import subprocess
 import socket
 import time
 import select
+import shlex
 
 (SUCCESS, COMMAND_FAIL, CONNECT_FAIL, DISCONNECT, ACCEPT_FAIL, DATA_MISMATCH) = range(6)
 labels = ["success", "command fail", "connection fail", "disconnection", "accept fail", "data mismatch"]
@@ -25,9 +26,15 @@ def test(expect, client_af, server_af, from_ip, to_ip, args="", client_sends_fir
     server_sock.listen(0)
     server_port = server_sock.getsockname()[1]
 
-    all_args = "-1 %s %d %s %d" % (args, client_port, to_ip, server_port)
-    print ("Running with %s" % all_args)
-    if subprocess.run(["./6tunnel"] + all_args.split()).returncode != 0:
+    all_args = ["-1"] + shlex.split(args) + [str(client_port), to_ip, str(server_port)]
+    print("Running with %s" % " ".join(all_args))
+    
+    try:
+        retcode = subprocess.run(["./6tunnel"] + all_args).returncode
+    except OSError:
+        retcode = 127
+        
+    if retcode != 0:
         if expect != COMMAND_FAIL:
             raise Exception("expected %s yet command failed" % labels[expect])
         else:
