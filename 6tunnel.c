@@ -25,7 +25,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <unistd.h>
-#include <getopt.h>
 #include <netdb.h>
 #include <string.h>
 #include <sys/types.h>
