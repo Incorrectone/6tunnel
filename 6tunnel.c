@@ -347,6 +347,13 @@ void make_udp_tunnel(int listen_fd){
 					for (remote_ptr = remote_ai; remote_ptr != NULL; remote_ptr = remote_ptr->ai_next) {
 						client->outbound_socket_fd = socket(remote_ptr->ai_family, SOCK_DGRAM, 0);
 
+						if (client->outbound_socket_fd >= FD_SETSIZE) {
+							debug("Warning: FD_SETSIZE limit reached, dropping new UDP client\n");
+							close(client->outbound_socket_fd);
+							free(client);
+							continue; // Skip processing this packet
+						}
+
 						if (client->outbound_socket_fd < 0)
 							continue;
 
