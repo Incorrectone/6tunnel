@@ -214,38 +214,38 @@ const char *source_map_find(const char *ipv4)
 }
 
 int same_address(
-    const struct sockaddr_storage *left,
-    const struct sockaddr_storage *right
+	const struct sockaddr_storage *left,
+	const struct sockaddr_storage *right
 ) {
-    if (left->ss_family != right->ss_family)
-        return 0;
+	if (left->ss_family != right->ss_family)
+		return 0;
 
-    if (left->ss_family == AF_INET) {
-        const struct sockaddr_in *left4;
-        const struct sockaddr_in *right4;
+	if (left->ss_family == AF_INET) {
+		const struct sockaddr_in *left4;
+		const struct sockaddr_in *right4;
 
-        left4 = (const struct sockaddr_in *)left;
-        right4 = (const struct sockaddr_in *)right;
+		left4 = (const struct sockaddr_in *)left;
+		right4 = (const struct sockaddr_in *)right;
 
-        return left4->sin_port == right4->sin_port &&
-               left4->sin_addr.s_addr == right4->sin_addr.s_addr;
-    }
+		return left4->sin_port == right4->sin_port &&
+		left4->sin_addr.s_addr == right4->sin_addr.s_addr;
+	}
 
-    if (left->ss_family == AF_INET6) {
-        const struct sockaddr_in6 *left6;
-        const struct sockaddr_in6 *right6;
+	if (left->ss_family == AF_INET6) {
+		const struct sockaddr_in6 *left6;
+		const struct sockaddr_in6 *right6;
 
-        left6 = (const struct sockaddr_in6 *)left;
-        right6 = (const struct sockaddr_in6 *)right;
+		left6 = (const struct sockaddr_in6 *)left;
+		right6 = (const struct sockaddr_in6 *)right;
 
 		return left6->sin6_port == right6->sin6_port &&
 			left6->sin6_scope_id == right6->sin6_scope_id &&
 			memcmp(&left6->sin6_addr,
 					&right6->sin6_addr,
 					sizeof(left6->sin6_addr)) == 0;
-    }
+	}
 
-    return 0;
+	return 0;
 }
 
 void make_udp_tunnel(int listen_fd){
@@ -503,14 +503,14 @@ void make_udp_tunnel(int listen_fd){
 	} // for end
 
 cleanup:
-    while (clients != NULL) {
-        client = clients;
-        clients = clients->next;
-        close(client->outbound_socket_fd);
-        free(client);
-    }
+	while (clients != NULL) {
+		client = clients;
+		clients = clients->next;
+		close(client->outbound_socket_fd);
+		free(client);
+	}
 
-    freeaddrinfo(remote_ai);
+	freeaddrinfo(remote_ai);
 }
 
 void make_tunnel(int rsock, const char *client_addr)
@@ -760,6 +760,7 @@ void usage(const char *arg0)
 "usage: %s [-146dvh] [-s sourcehost] [-l localhost] [-i pass]\n"
 "           [-I pass] [-L limit] [-A filename] [-p pidfile]\n"
 "           [-m mapfile] localport remotehost [remoteport]\n"
+"			[-U UDP]"
 "\n"
 "  -1  allow only single connection and quit\n"
 "  -4  connect to IPv4 endpoints (default: connect to IPv6)\n"
