@@ -45,7 +45,7 @@
 		printf(x); \
 } while(0)
 
-int verbose = 0, conn_count = 0;
+int verbose = 0, conn_count = 0, conn_limit = 0;
 int remote_port, hexdump = 0;
 int remote_hint[2] = { AF_INET6, AF_INET };
 int local_hint = AF_INET;
@@ -330,6 +330,11 @@ void make_udp_tunnel(int listen_fd){
 				}
 
 				if(!client){
+					if (conn_limit && conn_count >= conn_limit) {
+						debug("UDP client rejected due to connection limit\n");
+						continue;
+					}
+
 					client = malloc(sizeof(struct active_udp_client));
 
 					if (client == NULL) {
@@ -407,6 +412,7 @@ void make_udp_tunnel(int listen_fd){
 						free(client_ip);
 					}
 
+					conn_count++;
 					client->next = clients;
 					clients = client;
 				}
@@ -493,6 +499,9 @@ void make_udp_tunnel(int listen_fd){
 					previous->next = client->next;
 					client = client->next;
 				}
+
+				if (conn_count > 0)
+					conn_count--;
 
 				free(to_delete);
 			}else{	
@@ -896,7 +905,7 @@ void sigterm(int unused)
 int main(int argc, char **argv)
 {
 	int force = 0, listen_fd, single_connection = 0, jeden = 1, local_port;
-	int detach = 1, conn_limit = 0, optc;
+	int detach = 1, optc;
 	const char *username = NULL;
 	char *local_host = NULL;
 	struct addrinfo *ai;
