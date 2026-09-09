@@ -463,7 +463,7 @@ void make_udp_tunnel(int listen_fd){
 		client = clients;
 		previous = NULL;
 
-		while(client != NULL){ // remove timed out outboud fds
+		while(client != NULL){ // remove timed out outbound fds
 			if(time(NULL) - client->last_active_time >= udp_client_timeout){
 				char *client_ip = xntop((struct sockaddr *)&client->client_sockaddr);
 
