@@ -955,7 +955,7 @@ int main(int argc, char **argv)
 				printf("%s\n", PACKAGE_STRING);
 				exit(0);
 			case 'U':
-				printf("warning: Using UDP Tunnel experimentally. Expect bugs.\n");
+				fprintf(stderr, "warning: Using UDP Tunnel experimentally. Expect bugs.\n");
 				handle_udp = true;
 				break;
 			default:
